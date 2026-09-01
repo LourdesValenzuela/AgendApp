@@ -28,6 +28,9 @@ public class OfferedService {
     @Column(nullable = false)
     private Integer duration;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     public OfferedService() {
     }
 
@@ -73,5 +76,13 @@ public class OfferedService {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -24,6 +24,8 @@ public class OfferedServiceRequestDTO {
     @Positive(message = "Duration must be greater than zero")
     private Integer duration;
 
+    private String imageUrl;
+
     public OfferedServiceRequestDTO() {
     }
 
@@ -65,5 +67,13 @@ public class OfferedServiceRequestDTO {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

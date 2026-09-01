@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
+
 import { getServices } from '../services/serviceApi'
+
 import BookingForm from '../components/BookingForm'
+import ServiceCard from '../components/ServiceCard'
 import Card from '../components/ui/Card'
-import Button from '../components/ui/Button'
 import PageHeader from '../components/ui/PageHeader'
-import { formatGuarani } from '../utils/currencyUtils'
 
 function ServicesPage() {
   const [services, setServices] = useState([])
-  const [selectedService, setSelectedService] = useState(null)
+  const [selectedService, setSelectedService] =
+    useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -34,7 +36,9 @@ function ServicesPage() {
     return (
       <BookingForm
         service={selectedService}
-        onCancel={() => setSelectedService(null)}
+        onCancel={() =>
+          setSelectedService(null)
+        }
       />
     )
   }
@@ -77,58 +81,6 @@ function ServicesPage() {
           </div>
         )}
     </section>
-  )
-}
-
-function ServiceCard({
-  service,
-  onReserve,
-}) {
-  return (
-    <Card hover className="overflow-hidden">
-      <div className="h-48 bg-primary-soft" />
-
-      <div className="flex min-h-[270px] flex-col p-6">
-        <h2 className="text-xl font-semibold">
-          {service.name}
-        </h2>
-
-        <p className="mt-3 flex-1 text-sm leading-6 text-text-secondary">
-          {service.description ||
-            'Servicio disponible para reserva.'}
-        </p>
-
-        <div className="mt-6 flex items-end justify-between">
-          <div>
-            <span className="text-xs text-text-muted">
-              Precio
-            </span>
-
-            <p className="mt-1 text-xl font-bold">
-              {formatGuarani(service.price)}
-            </p>
-          </div>
-
-          <div className="text-right">
-            <span className="text-xs text-text-muted">
-              Duración
-            </span>
-
-            <p className="mt-1 text-sm font-medium">
-              {service.duration} min
-            </p>
-          </div>
-        </div>
-
-        <Button
-          size="lg"
-          className="mt-6 w-full"
-          onClick={onReserve}
-        >
-          Reservar turno
-        </Button>
-      </div>
-    </Card>
   )
 }
 

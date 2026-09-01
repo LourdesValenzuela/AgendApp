@@ -51,6 +51,7 @@ public class OfferedServiceImpl implements IOfferedService {
         service.setDescription(dto.getDescription());
         service.setPrice(dto.getPrice());
         service.setDuration(dto.getDuration());
+        service.setImageUrl(dto.getImageUrl());
 
         return toResponseDTO(
                 offeredServiceRepository.save(service)
@@ -70,6 +71,7 @@ public class OfferedServiceImpl implements IOfferedService {
         service.setDescription(dto.getDescription());
         service.setPrice(dto.getPrice());
         service.setDuration(dto.getDuration());
+        service.setImageUrl(dto.getImageUrl());
 
         return toResponseDTO(
                 offeredServiceRepository.save(service)
@@ -109,7 +111,8 @@ public class OfferedServiceImpl implements IOfferedService {
                 service.getName(),
                 service.getDescription(),
                 service.getPrice(),
-                service.getDuration()
+                service.getDuration(),
+                service.getImageUrl()
         );
     }
 }

@@ -1,9 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   createService,
   updateService,
   deleteService,
 } from '../services/serviceApi'
+import {
+  uploadServiceImage,
+} from '../services/storageService'
 
 import Button from './ui/Button'
 import Card from './ui/Card'
@@ -16,6 +19,7 @@ const EMPTY_FORM = {
   description: '',
   price: '',
   duration: '',
+  imageUrl: '',
 }
 
 const INPUT_STYLES =
@@ -31,12 +35,29 @@ function AdminServices({
   const [editingId, setEditingId] =
     useState(null)
 
+  const [imageFile, setImageFile] =
+    useState(null)
+
+  const [imagePreview, setImagePreview] =
+    useState('')
+
   const [error, setError] = useState('')
   const [message, setMessage] =
     useState('')
 
   const [saving, setSaving] =
     useState(false)
+
+  useEffect(() => {
+    return () => {
+      if (
+        imagePreview &&
+        imagePreview.startsWith('blob:')
+      ) {
+        URL.revokeObjectURL(imagePreview)
+      }
+    }
+  }, [imagePreview])
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -45,6 +66,28 @@ function AdminServices({
       ...current,
       [name]: value,
     }))
+  }
+
+  function handleImageChange(event) {
+    const file = event.target.files?.[0]
+
+    if (!file) {
+      return
+    }
+
+    if (!file.type.startsWith('image/')) {
+      setError(
+        'El archivo seleccionado debe ser una imagen.'
+      )
+      return
+    }
+
+    setImageFile(file)
+    setImagePreview(
+      URL.createObjectURL(file)
+    )
+
+    clearFeedback()
   }
 
   function handleEdit(service) {
@@ -56,7 +99,13 @@ function AdminServices({
         service.description ?? '',
       price: service.price,
       duration: service.duration,
+      imageUrl: service.imageUrl ?? '',
     })
+
+    setImageFile(null)
+    setImagePreview(
+      service.imageUrl ?? ''
+    )
 
     clearFeedback()
   }
@@ -64,6 +113,8 @@ function AdminServices({
   function resetForm() {
     setEditingId(null)
     setForm(EMPTY_FORM)
+    setImageFile(null)
+    setImagePreview('')
     setError('')
   }
 
@@ -72,7 +123,7 @@ function AdminServices({
     setMessage('')
   }
 
-  function buildServiceData() {
+  function buildServiceData(imageUrl) {
     return {
       businessId: 1,
       name: form.name.trim(),
@@ -80,6 +131,7 @@ function AdminServices({
         form.description.trim(),
       price: Number(form.price),
       duration: Number(form.duration),
+      imageUrl,
     }
   }
 
@@ -90,8 +142,17 @@ function AdminServices({
       setSaving(true)
       clearFeedback()
 
+      let imageUrl = form.imageUrl
+
+      if (imageFile) {
+        imageUrl =
+          await uploadServiceImage(
+            imageFile
+          )
+      }
+
       const serviceData =
-        buildServiceData()
+        buildServiceData(imageUrl)
 
       if (editingId) {
         await updateService(
@@ -112,6 +173,8 @@ function AdminServices({
 
       setEditingId(null)
       setForm(EMPTY_FORM)
+      setImageFile(null)
+      setImagePreview('')
 
       await onReload()
     } catch (error) {
@@ -136,8 +199,7 @@ function AdminServices({
       await deleteService(service.id)
 
       if (editingId === service.id) {
-        setEditingId(null)
-        setForm(EMPTY_FORM)
+        resetForm()
       }
 
       setMessage(
@@ -180,7 +242,9 @@ function AdminServices({
           form={form}
           editingId={editingId}
           saving={saving}
+          imagePreview={imagePreview}
           onChange={handleChange}
+          onImageChange={handleImageChange}
           onSubmit={handleSubmit}
           onCancel={resetForm}
         />
@@ -244,7 +308,7 @@ function ServiceItem({
   return (
     <article
       className={`
-        rounded-2xl border p-5 transition
+        rounded-2xl border p-4 transition
         ${
           editing
             ? 'border-primary bg-surface-soft'
@@ -252,8 +316,13 @@ function ServiceItem({
         }
       `}
     >
-      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
-        <div className="min-w-0">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <ServiceThumbnail
+          imageUrl={service.imageUrl}
+          name={service.name}
+        />
+
+        <div className="min-w-0 flex-1">
           <h4 className="font-semibold">
             {service.name}
           </h4>
@@ -303,11 +372,34 @@ function ServiceItem({
   )
 }
 
+function ServiceThumbnail({
+  imageUrl,
+  name,
+}) {
+  if (!imageUrl) {
+    return (
+      <div className="flex h-20 w-full shrink-0 items-center justify-center rounded-xl bg-primary-soft text-xs font-medium text-primary sm:w-24">
+        Sin imagen
+      </div>
+    )
+  }
+
+  return (
+    <img
+      src={imageUrl}
+      alt={name}
+      className="h-20 w-full shrink-0 rounded-xl object-cover sm:w-24"
+    />
+  )
+}
+
 function ServiceForm({
   form,
   editingId,
   saving,
+  imagePreview,
   onChange,
+  onImageChange,
   onSubmit,
   onCancel,
 }) {
@@ -333,6 +425,17 @@ function ServiceForm({
         </p>
 
         <div className="mt-7 space-y-5">
+          <FormField
+            label="Imagen"
+            htmlFor="service-image"
+            hint="JPG, PNG o WebP"
+          >
+            <ImageSelector
+              imagePreview={imagePreview}
+              onChange={onImageChange}
+            />
+          </FormField>
+
           <FormField
             label="Nombre del servicio"
             htmlFor="service-name"
@@ -427,6 +530,46 @@ function ServiceForm({
         </div>
       </form>
     </Card>
+  )
+}
+
+function ImageSelector({
+  imagePreview,
+  onChange,
+}) {
+  return (
+    <div>
+      {imagePreview ? (
+        <div className="mb-3 overflow-hidden rounded-2xl border border-border">
+          <img
+            src={imagePreview}
+            alt="Vista previa del servicio"
+            className="h-48 w-full object-cover"
+          />
+        </div>
+      ) : (
+        <div className="mb-3 flex h-36 items-center justify-center rounded-2xl border border-dashed border-border-strong bg-surface-soft">
+          <div className="text-center">
+            <p className="text-sm font-medium text-text-secondary">
+              Sin imagen seleccionada
+            </p>
+
+            <p className="mt-1 text-xs text-text-muted">
+              Agrega una foto representativa
+              del servicio
+            </p>
+          </div>
+        </div>
+      )}
+
+      <input
+        id="service-image"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={onChange}
+        className="block w-full text-sm text-text-secondary file:mr-4 file:rounded-lg file:border-0 file:bg-primary-soft file:px-4 file:py-2 file:text-sm file:font-medium file:text-primary hover:file:bg-surface-hover"
+      />
+    </div>
   )
 }
 

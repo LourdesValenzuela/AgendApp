@@ -10,6 +10,7 @@ public class OfferedServiceResponseDTO {
     private String description;
     private BigDecimal price;
     private Integer duration;
+    private String imageUrl;
 
     public OfferedServiceResponseDTO() {
     }
@@ -20,7 +21,8 @@ public class OfferedServiceResponseDTO {
             String name,
             String description,
             BigDecimal price,
-            Integer duration
+            Integer duration,
+            String imageUrl
     ) {
         this.id = id;
         this.businessId = businessId;
@@ -28,6 +30,7 @@ public class OfferedServiceResponseDTO {
         this.description = description;
         this.price = price;
         this.duration = duration;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -52,5 +55,13 @@ public class OfferedServiceResponseDTO {
 
     public Integer getDuration() {
         return duration;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
