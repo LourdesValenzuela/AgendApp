@@ -1,6 +1,6 @@
-# AgendaApp
+# AgendApp
 
-AgendaApp es una aplicación web responsive para la gestión y reserva de turnos en pequeños negocios, como peluquerías, salones, consultorios y centros de servicios.
+AgendApp es una aplicación web responsive para la gestión y reserva de turnos en pequeños negocios, como peluquerías, salones, consultorios y centros de servicios.
 
 El proyecto utiliza una arquitectura basada en microservicios, con Spring Boot en el backend, React en el frontend y Supabase para la persistencia de datos y almacenamiento de imágenes.
 
