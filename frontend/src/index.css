@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@theme {
+  --color-app-bg: #f7f2ea;
+  --color-surface: #fcfaf6;
+  --color-surface-soft: #f5eee7;
+  --color-surface-hover: #f2e9e0;
+
+  --color-primary: #a27c63;
+  --color-primary-hover: #906c55;
+  --color-primary-soft: #eee5dc;
+
+  --color-text-main: #2f241f;
+  --color-text-secondary: #776961;
+  --color-text-muted: #998980;
+
+  --color-border: #e5d7c7;
+  --color-border-strong: #dac8b7;
+
+  --color-success: #52724e;
+  --color-success-bg: #eaf3e8;
+  --color-success-border: #d5e3d2;
+
+  --color-warning: #b27718;
+  --color-warning-bg: #fbf2de;
+  --color-warning-border: #f0dfc1;
+
+  --color-danger: #a55148;
+  --color-danger-bg: #f7e8e5;
+  --color-danger-border: #ebcfca;
+
+  --color-neutral-bg: #efebe7;
+  --color-neutral-text: #726a64;
+  --color-neutral-border: #e1ddd8;
+}
+
+:root {
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  color: var(--color-text-main);
+  background: var(--color-app-bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--color-app-bg);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: white;
+}

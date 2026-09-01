@@ -1,5 +1,5 @@
 package com.agendapp.appointment_service.service;
-
+import java.time.LocalDate;
 import com.agendapp.appointment_service.dto.AppointmentRequestDTO;
 import com.agendapp.appointment_service.dto.AppointmentResponseDTO;
 import com.agendapp.appointment_service.entity.Appointment;
@@ -100,5 +100,21 @@ public class AppointmentServiceImpl implements IAppointmentService {
                 appointment.getEndTime(),
                 appointment.getStatus()
         );
+    }
+
+    @Override
+    public List<AppointmentResponseDTO> findByServiceAndDate(
+            Long serviceId,
+            LocalDate date
+    ) {
+        return appointmentRepository
+                .findByServiceIdAndDateAndStatusNot(
+                        serviceId,
+                        date,
+                        AppointmentStatus.CANCELLED
+                )
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
     }
 }
