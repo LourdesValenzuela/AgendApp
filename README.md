@@ -136,5 +136,3 @@ Cada servicio backend cuenta con su propio `Dockerfile` para el despliegue.
 El MVP se encuentra funcional y desplegado.
 
 Actualmente permite completar el flujo de reserva de turnos y administrar tanto los turnos como los servicios.
-
-Como mejora futura se puede incorporar autenticación y autorización para separar formalmente los roles de cliente y administrador.
