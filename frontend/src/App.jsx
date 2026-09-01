@@ -6,27 +6,45 @@ import AppointmentsPage from './pages/AppointmentsPage'
 import AdminPage from './pages/AdminPage'
 
 function App() {
+  const [role, setRole] = useState('client')
   const [page, setPage] = useState('services')
+
+  function handleRoleChange(newRole) {
+    setRole(newRole)
+
+    if (newRole === 'admin') {
+      setPage('admin')
+      return
+    }
+
+    setPage('services')
+  }
+
+  function handleNavigate(newPage) {
+    setPage(newPage)
+  }
 
   return (
     <div className="min-h-screen bg-app-bg text-text-main">
       <AppHeader
+        role={role}
         currentPage={page}
-        onNavigate={setPage}
+        onNavigate={handleNavigate}
+        onRoleChange={handleRoleChange}
       />
 
       <main className="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 lg:px-12 lg:py-16">
-        {page === 'services' && (
+        {role === 'client' && page === 'services' && (
           <ServicesPage />
         )}
 
-        {page === 'appointments' && (
+        {role === 'client' && page === 'appointments' && (
           <AppointmentsPage
             onBack={() => setPage('services')}
           />
         )}
 
-        {page === 'admin' && (
+        {role === 'admin' && (
           <AdminPage />
         )}
       </main>

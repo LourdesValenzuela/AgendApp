@@ -1,71 +1,60 @@
-# AgendaApp
+# AgendApp
 
-AgendaApp es una aplicación web para la gestión de turnos y reservas de servicios. El proyecto está orientado a pequeños negocios que necesitan administrar sus servicios, clientes y citas de forma sencilla.
+AgendApp es una aplicación web para la gestión y reserva de turnos en pequeños negocios.
 
-Actualmente se encuentra desarrollado el **backend del MVP**, utilizando una arquitectura basada en microservicios.
+El proyecto utiliza una arquitectura basada en microservicios, con Spring Boot en el backend, React en el frontend y Supabase para base de datos y almacenamiento de imágenes.
 
-## Tecnologías utilizadas
+## Funcionalidades
 
+### Cliente
+- Ver servicios disponibles.
+- Consultar precio, duración e imagen.
+- Seleccionar fecha y horario.
+- Reservar turnos.
+- Consultar y cancelar sus turnos.
+
+### Administración
+- Consultar los turnos.
+- Confirmar, completar o cancelar turnos.
+- Crear, editar y eliminar servicios.
+- Agregar imágenes a los servicios.
+
+Actualmente las vistas de Cliente y Administración están separadas en la interfaz, pero todavía no cuentan con autenticación ni autorización por roles.
+
+## Tecnologías
+
+**Backend**
 - Java 17
 - Spring Boot
-- Spring Web
 - Spring Data JPA
-- Bean Validation
 - Spring Cloud Gateway
 - PostgreSQL
-- Supabase
-- Maven
-- Git y GitHub
 
-## Arquitectura del backend
+**Frontend**
+- React
+- Vite
+- Tailwind CSS
+- JavaScript
 
-El backend está compuesto por tres aplicaciones:
+**Servicios**
+- Supabase PostgreSQL
+- Supabase Storage
 
-### API Gateway
-Punto de entrada principal del backend.
+## Arquitectura
 
-- Puerto: `8080`
-- Redirige las solicitudes hacia los microservicios correspondientes.
+```text
+React
+  |
+API Gateway
+  |
+  +-- User Service
+  |
+  +-- Appointment Service
+          |
+       Supabase
+```
 
-### User Service
-Gestiona la información relacionada con:
-
-- Negocios
-- Clientes
-- Servicios ofrecidos
-
-Puerto: `8081`
-
-### Appointment Service
-Gestiona los turnos y su estado.
-
-Permite:
-
-- Crear y consultar turnos.
-- Actualizar el estado de un turno.
-- Cancelar turnos.
-- Evitar la reserva duplicada de un mismo horario.
-
-Puerto: `8082`
-
-Los estados utilizados actualmente son:
-
-`PENDING`, `CONFIRMED`, `COMPLETED` y `CANCELLED`.
-
-## Base de datos
-
-Se utiliza **PostgreSQL alojado en Supabase**.
-
-Las principales tablas son:
-
-- `businesses`
-- `clients`
-- `services`
-- `appointments`
-
-Las credenciales sensibles, como la contraseña de la base de datos, se manejan mediante variables de entorno y no se almacenan en el repositorio.
-
-## Estructura actual
+## Estructura
 
 ```text
 AgendApp/
@@ -74,15 +63,30 @@ AgendApp/
 │   ├── user-service/
 │   └── appointment-service/
 ├── frontend/
-└── .gitignore
+├── .gitignore
+└── README.md
 ```
+
+## Ejecución local
+
+| Aplicación | Puerto |
+|---|---:|
+| API Gateway | 8080 |
+| User Service | 8081 |
+| Appointment Service | 8082 |
+| React | 5173 |
+
+El backend utiliza `DB_PASSWORD` como variable de entorno.
+
+El frontend utiliza:
+
+```env
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
+```
+
+Los archivos `.env` no deben subirse al repositorio.
 
 ## Estado del proyecto
 
-Actualmente se encuentra implementada la base del backend del MVP.
-
-El siguiente paso del proyecto es desarrollar el frontend con **React** y conectarlo al backend a través del API Gateway.
-
-## Objetivo
-
-El objetivo de AgendaApp es construir un proyecto pequeño pero completo que permita aplicar conceptos de desarrollo backend y frontend, APIs REST, microservicios, persistencia de datos y comunicación entre servicios.
+El MVP permite realizar el flujo completo de reserva de turnos y administrar tanto los turnos como los servicios.
