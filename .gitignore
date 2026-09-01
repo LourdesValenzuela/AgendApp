@@ -1,0 +1,21 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Maven
+target/
+**/target/
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+*.log
+
+# Windows
+Thumbs.db
+
+# React / Node
+node_modules/
+dist/
