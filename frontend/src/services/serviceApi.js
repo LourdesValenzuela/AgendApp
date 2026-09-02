@@ -1,7 +1,9 @@
+import { fetchWithRetry } from './fetchWithRetry'
+
 const API_URL = `${import.meta.env.VITE_API_URL}/api/services`
 
 export async function getServices() {
-  const response = await fetch(API_URL)
+  const response = await fetchWithRetry(API_URL)
 
   if (!response.ok) {
     throw new Error('No se pudieron obtener los servicios')

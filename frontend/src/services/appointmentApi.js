@@ -1,3 +1,5 @@
+import { fetchWithRetry } from './fetchWithRetry'
+
 const API_URL = `${import.meta.env.VITE_API_URL}/api/appointments`
 
 export async function createAppointment(appointment) {
@@ -18,7 +20,7 @@ export async function createAppointment(appointment) {
 }
 
 export async function getAppointments() {
-  const response = await fetch(API_URL)
+  const response = await fetchWithRetry(API_URL)
 
   if (!response.ok) {
     throw new Error('No se pudieron obtener los turnos')
@@ -32,7 +34,7 @@ export async function cancelAppointment(id) {
 }
 
 export async function getOccupiedAppointments(serviceId, date) {
-  const response = await fetch(
+  const response = await fetchWithRetry(
     `${API_URL}/availability?serviceId=${serviceId}&date=${date}`
   )
 
